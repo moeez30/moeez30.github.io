@@ -7,6 +7,7 @@ function DataContextProvider({ children }) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 useEffect(() => {
+
     const fetchData = async () => {
       try {
         const response = await instance.get('/getData:CampaignList_0');
@@ -23,6 +24,7 @@ useEffect(() => {
     };
 
     fetchData();
+  
   }, []);
 return (
     <DataContext.Provider value={{ data, isLoading }}>
