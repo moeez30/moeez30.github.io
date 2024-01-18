@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ const Login = () => {
     if (email === 'Moeez' && password === '123123') {
         // Authentication successful, perform necessary actions (e.g., store session)
         validLogin = 'Valid';
-        window.location.href = '/CampaignList'
+        window.location.href = '/FeaturePage'
         window.alert('Login successful');
       } else {
         // Authentication failed, display an error message or take appropriate action
