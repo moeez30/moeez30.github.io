@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import CampaignList from './pages/CampaignList';
@@ -21,6 +22,11 @@ function App() {
     <>
       <Router>
       <Header/>
+      <Helmet>
+        <meta http-equiv='cache-control' content='no-cache' />
+        <meta http-equiv='expires' content='0' />
+        <meta http-equiv='pragma' content='no-cache' />
+      </Helmet>
       {/* <Login/> */}
         {/* <DataContextProvider> */}
           <Routes> 
