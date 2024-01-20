@@ -8,6 +8,7 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    try{
     // Handle login logic here
     if (email === 'Moeez' && password === '123123') {
         // Authentication successful, perform necessary actions (e.g., store session)
@@ -19,6 +20,10 @@ const Login = () => {
         validLogin = 'Invalid';
         window.alert('Invalid credentials');
       }
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
   return (
