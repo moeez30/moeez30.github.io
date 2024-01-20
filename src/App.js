@@ -18,6 +18,7 @@ import Header from './components/Header';
 // import DataContextProvider from './context/DataContextProvider';
 
 function App() {
+  try{
   return (
     <>
       <Router>
@@ -48,6 +49,10 @@ function App() {
       </Router>
     </>
   );
+  }
+  catch(error){
+    console.log(error)
+  }
 }
 
 export default App;
