@@ -43,7 +43,7 @@ export function BiddingRuleForm({ data ,  setShowBiddingRuleForm}){
     try {
         await instance.post('/BiddingRule', formData);
         window.alert('Data has been submitted');
-        setShowBiddingRuleForm(true);
+        setShowBiddingRuleForm(false);
       } catch (error) {
         window.alert('Data not submitted');
         console.error(error);
