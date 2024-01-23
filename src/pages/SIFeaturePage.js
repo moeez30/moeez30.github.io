@@ -3,6 +3,7 @@ import Select from 'react-select'
 import axios from 'axios';
 import instance from "../API";
 import { BiddingRuleForm } from '../components/BiddingRuleForm';
+import { SIDayPartForm } from '../components/SIDayPartForm';
 let columnNum = 0;
 let rowID = '';
 let RulesInfo = [
@@ -32,7 +33,9 @@ const App = () => {
   const [adGroupRawData, setadGroupRawData] = useState([]);
   const [fetchCampaignData, setfetchCampaignData] = useState(0);
   const [fetchAdGroupData, setfetchAdGroupData] = useState(0);
-  const [showBiddingRuleForm, setShowBiddingRuleForm] = useState(false);
+  const [showBiddingRuleForm, setShowBiddingRuleForm] = useState(false);  
+  const [showDayPartRuleForm, setShowDayPartRuleForm] = useState(false);
+
 
   useEffect(() => {
     console.log(fetchCampaignData)
@@ -151,6 +154,11 @@ const App = () => {
     }else{
       setShowBiddingRuleForm(false);
     }
+    if(value === "DayParting Rule"){
+      setShowDayPartRuleForm(true);
+    }else{
+      setShowDayPartRuleForm(false);
+    }
     rowID = rowIndex;
     // console.log(rowIndex)
     // console.log(columnName)
@@ -167,6 +175,9 @@ const App = () => {
       <button onClick={addColumn}>Add Column</button>
       {showBiddingRuleForm && adGroupId && (
         <BiddingRuleForm data={adGroupId} setShowBiddingRuleForm={setShowBiddingRuleForm} />
+      )}
+      {showDayPartRuleForm && adGroupId && (
+        <SIDayPartForm data={adGroupId} setShowDayPartRuleForm={setShowDayPartRuleForm} />
       )}
       <table>
         <thead>
