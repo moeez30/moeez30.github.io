@@ -14,7 +14,7 @@ export function  SIDayPartForm ({ data,  setShowDayPartRuleForm }){
         "adgroupID" : data, // Include adgroupID in the form data
         "startTime" : startTime,
         "endTime" : endTime,
-        "enableManualBid" : enableManualBid,
+        "enableManualBid" : enableManualBid.toString(),
         "manualDayPartBid" : manualDayPartBid,
         "DayPartLowBid" : lowTimeBid
     };
