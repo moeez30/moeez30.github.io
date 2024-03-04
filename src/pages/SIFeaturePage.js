@@ -4,38 +4,84 @@ import axios from 'axios';
 import instance from "../API";
 import { BiddingRuleForm } from '../components/BiddingRuleForm';
 import { SIDayPartForm } from '../components/SIDayPartForm';
+import { PortfolioManageForm } from '../components/PorfolioManageForm';
 let columnNum = 0;
 let rowID = '';
 let RulesInfo = [
                 {"id" : 1, "name" : "Select Rule"},
-                {"id" : 2, "name" : "Bidding Rule"},
-                {"id" : 3, "name" : "DayParting Rule"},
-                {"id" : 4, "name" : "Import Rule"},
-                {"id" : 5, "name" : "Negative Rule"},
-                {"id" : 6, "name" : "Negative Word Rule"},
-                {"id" : 7, "name" : "Blacklist/Whitelist Rule"},
-                {"id" : 8, "name" : "Revive Rule"},
-                {"id" : 9, "name" : "Default Bid Rule"},
-                {"id" : 10, "name" : "Status Rule"},
-                {"id" : 11, "name" : "Daily Budget Rule"},
-                {"id" : 12, "name" : "Placement Rule"}
+                {"id" : 2, "name" : "Portfolio Budget Manage Rule"},
+                {"id" : 3, "name" : "Bidding Rule"},
+                {"id" : 4, "name" : "DayParting Rule"},
+                {"id" : 5, "name" : "Import Rule"},
+                {"id" : 6, "name" : "Negative Rule"},
+                {"id" : 7, "name" : "Negative Word Rule"},
+                {"id" : 8, "name" : "Blacklist/Whitelist Rule"},
+                {"id" : 9, "name" : "Revive Rule"},
+                {"id" : 10, "name" : "Default Bid Rule"},
+                {"id" : 11, "name" : "Status Rule"},
+                {"id" : 12, "name" : "Daily Budget Rule"},
+                {"id" : 13, "name" : "Placement Rule"}
               ] 
 let BiddingRuleInfo = {"id" : 1, "name" : "Bidding Rule"}
 const App = () => {
+  const [data0, setData0] = useState([]);
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState(RulesInfo);
   const [tableData, setTableData] = useState([]);
-  const [columnHeaders, setColumnHeaders] = useState(['Campaign', 'Adgroup']);
+  const [columnHeaders, setColumnHeaders] = useState(['Portfolio','Campaign', 'Adgroup']);
+  const [portfolioId, setPortfolioId] = useState(0);
   const [campaignId, setCampaignId] = useState(0);
   const [adGroupId, setAdGroupId] = useState(0);
   const [campaignRawData, setcampaignRawData] = useState([]);
   const [adGroupRawData, setadGroupRawData] = useState([]);
+  const [fetchPortfolioData, setfetchPortfolioData] = useState(0);
   const [fetchCampaignData, setfetchCampaignData] = useState(0);
   const [fetchAdGroupData, setfetchAdGroupData] = useState(0);
   const [showBiddingRuleForm, setShowBiddingRuleForm] = useState(false);  
   const [showDayPartRuleForm, setShowDayPartRuleForm] = useState(false);
+  const [showPortfolioCapForm, setShowPortfolioCapForm] = useState(false);
 
+
+  useEffect(() => {
+    console.log(fetchPortfolioData)
+    // Function to fetch data from the API endpoint
+    const fetchDataofPortfolio = async () => {
+      try {
+          console.log("Inside Try");
+          const response = await instance.get('/getData:PortfolioList_0');
+          console.log(response)
+          if (response.status !== 200) {
+            throw new Error('Network response was not ok');
+          }
+          const thePortfolioData = (response.data.data);
+          // console.log(theCampaignData)
+          // campaignData = newData
+          // setcampaignRawData(thePortfolioData); // Set the fetched data to the state 
+          // console.log(campaignRawData)
+
+          const firstOption = {"nodeId":rowID,"type":"Portfolio","label": "Create New", "state": "", "id": ""}
+          const portfolioOp = JSON.parse(thePortfolioData).map((item) => {
+            return {"nodeId":rowID,"type":"Portfolio","label": item.name, "state": item.state, "id": item.portfolioId}
+          })
+          const portofioFull = [firstOption,...portfolioOp];
+          console.log(portofioFull);
+          setData0(portofioFull);
+        //   addSelect(campaignFull)
+      } catch (error) {
+          console.log(error);
+      } finally {
+      }
+      
+    };
+
+    if(fetchPortfolioData > 0)
+    {
+      setfetchPortfolioData(0);
+      fetchDataofPortfolio();
+    }
+  
+  }, [fetchPortfolioData])
 
   useEffect(() => {
     console.log(fetchCampaignData)
@@ -43,7 +89,7 @@ const App = () => {
     const fetchDataofCampaign = async () => {
       try {
           console.log("Inside Try");
-          const response = await instance.get('/getData:CampaignList_0');
+          const response = await instance.get('/getData:CampaignList_'+portfolioId);
           console.log(response)
           if (response.status !== 200) {
             throw new Error('Network response was not ok');
@@ -119,7 +165,7 @@ const App = () => {
 
   const addRow = () => {
 
-    setfetchCampaignData(fetchCampaignData+1);
+    setfetchPortfolioData(fetchPortfolioData+1);
 
     setTableData((prevTableData) => [
       ...prevTableData,
@@ -141,6 +187,10 @@ const App = () => {
     // console.log(e)
     console.log(id)
     console.log(value)
+    if(columnName === "Portfolio"){
+      setPortfolioId(value);
+      setfetchCampaignData(fetchCampaignData + 1);
+    }    
     if(columnName === "Campaign"){
       setCampaignId(value);
       setfetchAdGroupData(fetchAdGroupData + 1);
@@ -149,6 +199,11 @@ const App = () => {
       setAdGroupId(value)
     }
 
+    if(value === "Portfolio Budget Manage Rule"){
+      setShowPortfolioCapForm(true);
+    }else{
+      setShowPortfolioCapForm(false);
+    }
     if(value === "Bidding Rule"){
       setShowBiddingRuleForm(true);
     }else{
@@ -179,6 +234,9 @@ const App = () => {
       {showDayPartRuleForm && adGroupId && (
         <SIDayPartForm data={adGroupId} setShowDayPartRuleForm={setShowDayPartRuleForm} />
       )}
+      {showPortfolioCapForm && portfolioId && (
+        <PortfolioManageForm data={portfolioId} setShowPortfolioCapForm={setShowPortfolioCapForm} />
+      )}
       <table>
         <thead>
           <tr>
@@ -196,7 +254,13 @@ const App = () => {
                     value={row[header]}
                     onChange={(e) => handleSelectChange(e.target.value,e.target.id, rowIndex, header)}
                   >
-                    {header === 'Campaign'
+                    {header === 'Portfolio'
+                      ? data0.map((option) => (
+                          <option id={option.id} value={option.id}>
+                            {option.label}
+                          </option>
+                        ))
+                    : header === 'Campaign'
                       ? data1.map((option) => (
                           <option id={option.id} value={option.id}>
                             {option.label}
